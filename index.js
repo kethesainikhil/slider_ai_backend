@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' })); 
-// const openai = new OpenAI( {apiKey: "sk-proj-uevg3bNsojCqQyeqkhhKT3BlbkFJA0vRLxuPIFtwWitRJ7Sd"} );
 
 app.use(express.json());
 
