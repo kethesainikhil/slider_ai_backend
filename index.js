@@ -12,7 +12,6 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' })); 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 app.use(express.json());
 
@@ -101,6 +100,8 @@ app.get('/api/email-details', async (req, res) => {
  const batchSize = 10; // Define the batch size for processing emails
 
  app.post('/classify-emails', async (req, res) => {
+  const apiKey = req.query.Google_Api_Key
+  const genAI = new GoogleGenerativeAI(apiKey);
    try {
      const emails = req.body.emails;
      const categories = [
@@ -164,7 +165,27 @@ app.get('/api/email-details', async (req, res) => {
    }
    return chunks;
  }
- 
+ app.post('/checkApiKey', async (req, res) => {
+  const apiKey = req.query.Google_Api_Key
+
+  try {
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+      // Define a prompt to test the API key
+      const prompt = "This is a test prompt to check if the API key works.";
+
+      // Generate content using the model and the prompt
+      const result = await model.generateContent(prompt);      
+      if(result){
+        res.json({ response:true });
+      }
+      // If the text contains the prompt, it means the API key is working
+
+  } catch (error) {
+      res.status(500).json({ response : false });
+  }
+});
 
 
 
